@@ -48,10 +48,13 @@ export default function HomePage() {
         
         setInput1("");
         setInput2("");
+
+        alert("Hunt started");
     }
 
     async function terminate() {
         const { error } = await supabase.from('hunts').insert({});
+        alert("Hunt terminated");
     }
 
     return (
