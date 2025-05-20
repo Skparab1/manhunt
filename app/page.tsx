@@ -330,11 +330,11 @@ export default function HomePage() {
     // console.log("Data: ", data);
 
     if (!data || data.length === 0) {
-      const { error1 } = await supabase.from('points').insert({ user: user, points: 0 });
+      const { error: insertError } = await supabase.from('points').insert({ user: user, points: 0 });
     }
     
     // because we want to trigger the update subscription regardless
-    const { error2 } = await supabase.from('points').update({ points: newPoints }).eq('user', user);
+    const { error: updateError } = await supabase.from('points').update({ points: newPoints }).eq('user', user);
   }
 
   async function saveTask(user: string, task: string, points: number, status: number){
@@ -419,12 +419,12 @@ export default function HomePage() {
             <>
               <h1 className="text-5xl font-bold">Complete!</h1>
               <h1>Runners
-                  {hunts[hunts.length-2].runners.map((runner, index) => (
-                      runner === session?.user.email ? (
-                          <span key={index} className="m-2">You</span>
-                      ) : (
-                          <span key={index} className="m-2">{runner}</span> 
-                      )
+                  {hunts[hunts.length-2].runners.map((runner: string, index: number) => (
+                    runner === session?.user.email ? (
+                      <span key={index} className="m-2">You</span>
+                    ) : (
+                      <span key={index} className="m-2">{runner}</span> 
+                    )
                   ))} have completed their run.
               </h1> 
             </> 
