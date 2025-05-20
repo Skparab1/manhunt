@@ -4,6 +4,7 @@
 import { useState, useEffect, useRef } from "react";
 
 import supabase from "../utils/supabase";
+import type { Session } from '@supabase/supabase-js';
 
 import { Button } from "@/components/ui/button";
 
@@ -13,6 +14,29 @@ export default function HomePage() {
 
     const [input1, setInput1] = useState<string>("");
     const [input2, setInput2] = useState<string>("");
+
+    const [session, setSession] = useState<Session | null>(null)
+    
+      useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session)
+            if (session && session.user.email != "skparab1@gmail.com"){
+                location.href = "/auth";
+            }
+        })
+    
+        const {
+          data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session)
+            if (session && session.user.email != "skparab1@gmail.com"){
+                location.href = "/auth";
+            }
+        })
+    
+        return () => subscription.unsubscribe()
+      }, [])
+
 
     async function handleSubmit(input1: string, input2: string) {
         const splitRunners = input1.split(",");
@@ -24,6 +48,10 @@ export default function HomePage() {
         
         setInput1("");
         setInput2("");
+    }
+
+    async function terminate() {
+        const { error } = await supabase.from('hunts').insert({});
     }
 
     return (
@@ -51,6 +79,10 @@ export default function HomePage() {
 
                 <Button onClick={() => handleSubmit(input1, input2)}>
                     Submit
+                </Button>
+
+                <Button onClick={() => terminate()}>
+                    Terminate current hunt
                 </Button>
             </main>
             <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
