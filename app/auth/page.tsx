@@ -11,9 +11,6 @@ import type { Session } from '@supabase/supabase-js'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 
-import Head from 'next/head';
-
-
 export default function AuthPage() {
   
   const [session, setSession] = useState<Session | null>(null)
@@ -45,14 +42,6 @@ export default function AuthPage() {
 
     return (
       <div className='text-center ml-1/2 mt-[100px]'>
-        <Head>
-          <title>Manhunt - Auth</title>
-          <meta
-            name="description"
-            content="Jabari Auth"
-          />
-        </Head>
-
         <div>Hello, {session.user.email}</div>
         <Button onClick={() => { window.location.href = "/"; }}>Go to Manhunt</Button>
 

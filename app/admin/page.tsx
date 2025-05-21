@@ -60,14 +60,6 @@ export default function HomePage() {
     return (
         <>
 
-            <Head>
-            <title>Manhunt - Admin</title>
-            <meta
-                name="description"
-                content="Hi Admin"
-            />
-            </Head>
-
             <div className="w-full bg-slate-800 text-white h-10 absolute t-0">
                 <h1 className="absolute l-0 m-2">Manhunt • ADMIN</h1>
             </div>

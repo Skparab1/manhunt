@@ -1,5 +1,6 @@
 "use client"
 
+
 import { useState, useEffect, useRef } from "react";
 
 import supabase from "./utils/supabase";
@@ -25,9 +26,6 @@ import generateChallenge from "./utils/manhunt";
 import { Button } from "@/components/ui/button";
 
 import { toast } from "sonner"
-
-import Head from 'next/head';
-
 
 export default function HomePage() {
 
@@ -438,14 +436,6 @@ export default function HomePage() {
 
   return (
     <>
-      <Head>
-        <title>Manhunt</title>
-        <meta
-          name="description"
-          content="Jabari Manhunt"
-        />
-      </Head>
-
       <div className="w-full bg-slate-800 text-white h-10 absolute t-0">
         <h1 className="absolute l-0 m-2">Manhunt • {session?.user.email}</h1>
       </div>
