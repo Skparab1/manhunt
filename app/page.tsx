@@ -1,5 +1,6 @@
 "use client"
 
+import Head from "next/head";
 
 import { useState, useEffect, useRef } from "react";
 
@@ -28,6 +29,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner"
 
 export default function HomePage() {
+
+  document.title = "Manhunt";
 
   const [session, setSession] = useState<Session | null>(null);
   const [hunts, setHunts] = useState<any[]>([]);
@@ -64,12 +67,19 @@ export default function HomePage() {
       .from("hunts")
       .select()
       .then(async ({ data }) => {
-        setHunts(data ?? []);
-        setLoading(false);
-        console.log("Data34: ", data);
+        const datasorted = data?.sort((a, b) => {
+          if (!a.id || !b.id) {
+            return 0;
+          }
+          return a.id-b.id;
+        });
 
-        if (data && data.length > 0) {
-          recentRunId = data[data.length - 1].id;
+        setHunts(datasorted ?? []);
+        setLoading(false);
+        console.log("Data34: ", datasorted);
+
+        if (datasorted && datasorted.length > 0) {
+          recentRunId = datasorted[datasorted.length - 1].id;
 
           const { data: huntData } = await supabase
           .from("hunts")
@@ -92,10 +102,17 @@ export default function HomePage() {
               useEmail = huntData[0].runners[0];
             }
 
-            const { data } = await supabase
+            let { data } = await supabase
               .from("tasks")
               .select()
               .eq('user', useEmail || "NULL")
+
+            data = data?.sort((a, b) => {
+              if (!a.id || !b.id) {
+                return 0;
+              }
+              return a.id-b.id;
+            }) ?? null;
 
             console.log("Data72: ", data);
 
@@ -134,9 +151,16 @@ export default function HomePage() {
               .then(({ data }) => {
                 console.log("Data59: ", data);
 
-                if (data && data.length > 0) {
-                  for (let i = 0; i < data.length; i++) {
-                    setOtherChallenges((prev) => [...prev, [data[i].task, data[i].points, data[i].status]]);
+                const datasorted = data?.sort((a, b) => {
+                  if (!a.id || !b.id) {
+                    return 0;
+                  }
+                  return a.id-b.id;
+                });
+
+                if (datasorted && datasorted.length > 0) {
+                  for (let i = 0; i < datasorted.length; i++) {
+                    setOtherChallenges((prev) => [...prev, [datasorted[i].task, datasorted[i].points, datasorted[i].status]]);
                   }
                 }
 
@@ -196,9 +220,16 @@ export default function HomePage() {
       .then(({ data }) => {
         console.log("Data22: ", data);
 
-        if (data && data.length > 0) {
-          for (let i = 0; i < data.length; i++) {
-            setPastChallenges((prev) => [...prev, [data[i].task, data[i].points, data[i].status]]);
+        const datasorted = data?.sort((a, b) => {
+          if (!a.id || !b.id) {
+            return 0;
+          }
+          return a.id-b.id;
+        });
+
+        if (datasorted && datasorted.length > 0) {
+          for (let i = 0; i < datasorted.length; i++) {
+            setPastChallenges((prev) => [...prev, [datasorted[i].task, datasorted[i].points, datasorted[i].status]]);
           }
         }
       });
@@ -408,9 +439,13 @@ export default function HomePage() {
 
   return (
     <>
+      <Head>
+        <title>You better contact us!</title>
+      </Head>
       <div className="w-full bg-slate-800 text-white h-10 absolute t-0">
         <h1 className="absolute l-0 m-2">Manhunt • {session?.user.email}</h1>
       </div>
+      {/* <h1 className="text-5xl font-bold pt-32">{String(hunts[hunts.length-1].id)}Jabari</h1> */}
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-stone-300">
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
           {hunts[hunts.length-1] == undefined ? (

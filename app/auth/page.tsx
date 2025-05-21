@@ -12,6 +12,8 @@ import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 
 export default function AuthPage() {
+
+  document.title = "Manhunt - Auth";
   
   const [session, setSession] = useState<Session | null>(null)
 

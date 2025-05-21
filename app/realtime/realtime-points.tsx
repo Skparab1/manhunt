@@ -28,21 +28,60 @@ export default function PointsStream({ pointsArr }: { pointsArr: [string, number
             },
             (payload: { new: any }) => {
                 console.log({ payload });
-                console.log(payload.new);
-                console.log(points);
+                console.log("JABARI",payload.new, points.length);
 
-                let i = 0;
-                while (i < points.length) {
-                    if (points[i][0] === payload.new.user) {
-                        const updatedPoints: [string, number][] = points.map((p, idx) =>
-                            idx === i ? [p[0], payload.new.points as number] : p
-                        );
-                        // alert('set a points');
-                        setPoints(updatedPoints);
-                        break;
+
+                // lets just ignore the payload for now, and get the points
+
+                supabase
+                    .from("points")
+                    .select()
+                    .then(({ data }) => {
+            
+                    if (data && data.length > 0) {
+                        setPoints(data.map((item: any) => [item.user, item.points]));
+                    } else {
+                        setPoints([]);
                     }
-                    i += 1;
-                }
+            
+                    // console.log("Everyone points: ", everyonePoints);
+                });
+
+
+                // console.log("JABARI",points);
+
+                // setPoints(prevPoints => {
+                //     const userIndex = prevPoints.findIndex(([user]) => user === payload.new.user);
+
+                //     if (userIndex !== -1) {
+                //         const updatedPoints = [...prevPoints];
+                //         updatedPoints[userIndex] = [payload.new.user, payload.new.points];
+                //         return updatedPoints;
+                //     } else {
+                //         return [...prevPoints, [payload.new.user, payload.new.points]];
+                //     }
+                // });
+
+                // let i = 0;
+                // let found = false
+                // while (i < points.length) {
+                //     console.log(points[i][0], payload.new.user);
+                //     if (points[i][0] === payload.new.user) {
+                //         updatedPoints.push([points[i][0], payload.new.points]);
+                //         found = true;
+                //     } else {
+                //         updatedPoints.push(points[i]);
+                //     }
+                //     i += 1;
+                // }
+
+                // if (!found) {
+                //     updatedPoints.push([payload.new.user, payload.new.points]);
+                // }
+
+                // console.log("JABARI",updatedPoints);
+
+                // setPoints(updatedPoints);
             }
         ).subscribe();
 

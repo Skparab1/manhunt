@@ -12,6 +12,8 @@ import { toast } from "sonner"
 
 export default function HomePage() {
 
+    document.title = "Manhunt - Admin";
+
     const [input1, setInput1] = useState<string>("");
     const [input2, setInput2] = useState<string>("");
 
@@ -75,7 +77,7 @@ export default function HomePage() {
                 <input
                     type="text"
                     className="border-2 border-black border-solid bg-gray-200 rounded-md p-2"
-                    placeholder="Enter Running Team Members"
+                    placeholder="Enter Hunting Team Members"
                     value={input2}
                     onChange={e => setInput2(e.target.value)}
                 />
