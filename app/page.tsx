@@ -1,7 +1,5 @@
 "use client"
 
-import Head from "next/head";
-
 import { useState, useEffect, useRef } from "react";
 
 import supabase from "./utils/supabase";
@@ -28,9 +26,10 @@ import { Button } from "@/components/ui/button";
 
 import { toast } from "sonner"
 
-export default function HomePage() {
+import Head from 'next/head';
 
-  document.title = "Manhunt";
+
+export default function HomePage() {
 
   const [session, setSession] = useState<Session | null>(null);
   const [hunts, setHunts] = useState<any[]>([]);
@@ -440,8 +439,13 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title>You better contact us!</title>
+        <title>Manhunt</title>
+        <meta
+          name="description"
+          content="Jabari Manhunt"
+        />
       </Head>
+
       <div className="w-full bg-slate-800 text-white h-10 absolute t-0">
         <h1 className="absolute l-0 m-2">Manhunt • {session?.user.email}</h1>
       </div>
