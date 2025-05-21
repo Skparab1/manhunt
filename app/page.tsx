@@ -27,6 +27,8 @@ import { Button } from "@/components/ui/button";
 
 import { toast } from "sonner"
 
+import MyMap from "@/components/map/mapui";
+
 export default function HomePage() {
 
   const [session, setSession] = useState<Session | null>(null);
@@ -497,7 +499,7 @@ export default function HomePage() {
               </>
               )}
           </div>   
-        
+          <MyMap />
         </main>
         <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
           
