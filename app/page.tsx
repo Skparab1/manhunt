@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 
 import { toast } from "sonner"
 
-import MyMap from "@/components/map/mapui";
+import MyMap from "@/components/Map/mapui";
 
 export default function HomePage() {
 
