@@ -43,9 +43,11 @@ export default function AuthPage() {
     return (
       <div className='text-center ml-1/2 mt-[100px]'>
         <div>Hello, {session.user.email}</div>
-        <Button onClick={() => { window.location.href = "/"; }}>Go to Manhunt</Button>
+        <Button className="m-2 bg-blue-400" onClick={() => { window.location.href = "/"; }}>Go to Manhunt</Button>
 
-        <Button className='bg-green-400' onClick={async () => {
+        <Button className="m-2" onClick={() => { window.location.href = "/admin"; }}>Admin</Button>
+
+        <Button className='bg-green-400 m-2' onClick={async () => {
           const { error } = await supabase.auth.signOut()
           if (error) console.log('Error logging out:', error.message)
           else console.log('Logged out successfully')

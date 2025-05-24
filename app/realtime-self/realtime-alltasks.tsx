@@ -52,7 +52,17 @@ export default function AllTasksStreamSelf({ theChallenge, user }: { theChalleng
     return (
         <div>
             {[...allChallenges].reverse().map((challenge, index) => (
-            <div key={index} className={(challenge[2] == 1 ? "bg-green-200" : "bg-red-200") + " p-4 rounded-md text-center m-4"}>
+            <div
+                key={index}
+                className={
+                    (challenge[2] == 1
+                        ? "bg-green-200"
+                        : challenge[2] == 2
+                        ? "bg-yellow-200"
+                        : "bg-red-200") +
+                    " p-4 rounded-md text-center m-4"
+                }
+            >
                 <h2>{challenge[0]}</h2>
                 <h2 className="font-bold">{challenge[1]} points</h2>
             </div>

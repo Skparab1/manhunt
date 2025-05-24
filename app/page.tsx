@@ -379,7 +379,7 @@ export default function HomePage() {
     // setPastChallenges([...pastChallenges, [currentChallenge[0], currentChallenge[1], 1]]);
 
 
-    toast("Challenge completed! New challenge generated.");
+    toast("Challenge completed!");
 
 
     // saveTask("skparab1@gmail.com", "do something cool", 5, 1);
@@ -398,6 +398,38 @@ export default function HomePage() {
 
     // makeChallenge();
   }
+
+
+  function skipChallenge() {
+    if (currentChallenge[0] === "") {
+      alert("No challenge to complete");
+      return;
+    }
+
+    setCurrentPoints(currentPoints - 1);
+    // setPastChallenges([...pastChallenges, [currentChallenge[0], currentChallenge[1], 1]]);
+
+
+    toast("Challenge skipped!");
+
+
+    // saveTask("skparab1@gmail.com", "do something cool", 5, 1);
+
+    let i = 0;
+    while (i < hunts[hunts.length - 1].runners.length) {
+      upsertPoints(hunts[hunts.length - 1].runners[i], currentPoints-1);
+
+      saveTask(hunts[hunts.length - 1].runners[i], currentChallenge[0], currentChallenge[1], 2);
+      deleteDrawnTasks(hunts[hunts.length - 1].runners[i]);
+
+      i += 1;
+    }
+
+    setCurrentChallenge(["", 0]);
+
+    // makeChallenge();
+  }
+
 
   async function vetoChallenge() {
     if (currentChallenge[0] === "") {
@@ -447,15 +479,16 @@ export default function HomePage() {
           ) : !hunts[hunts.length-1].runners ? (
             <>
               <h1 className="text-5xl font-bold">Complete!</h1>
-              <h1>Runners
+              <h1 className="font-bold">Runners</h1> 
+
                   {hunts[hunts.length-2].runners.map((runner: string, index: number) => (
                     runner === session?.user.email ? (
-                      <span key={index} className="m-2">You</span>
+                      <h2 key={index} className="m-0">You</h2>
                     ) : (
-                      <span key={index} className="m-2">{runner}</span> 
+                      <h2 key={index} className="m-0">{runner}</h2> 
                     )
-                  ))} have completed their run.
-              </h1> 
+                  ))} 
+              <h1 className="font-bold">have completed their run.</h1>
             </> 
           ) : null}
           
@@ -495,6 +528,9 @@ export default function HomePage() {
                                   <div className="flex gap-[24px] flex-wrap items-center justify-center">
                                     <Button className="bg-green-400" onClick={completeChallenge}>
                                       Complete
+                                    </Button>
+                                    <Button className="bg-yellow-400" onClick={skipChallenge}>
+                                      Skip
                                     </Button>
                                     <Button className="bg-red-400" onClick={vetoChallenge}>
                                       Veto

@@ -131,32 +131,30 @@ export default function RealtimeStream({serverData} : {serverData: Hunt[]}) {
 
                     { huntTime !== undefined && huntTime < 1800 ? (
                         <>
-                        <h1 className="mt-8">Hunters: 
+                        <h1 className="mt-8 font-bold">Hunters:</h1>
                             {hunts[hunts.length-1].runners &&
                                 <>
                                 {hunts[hunts.length-1].hunters.map((hunter, index) => (
                                     hunter === session?.user.email ? (
-                                        <span className="m-2" key={index}>You</span>
+                                        <h4 key={index}>You</h4>
                                     ) : (
-                                        <span className="m-2" key={index}>{hunter}</span>
+                                        <h4 key={index}>{hunter}</h4>
                                     )
                                 ))}
                                 </>
                             }
-                        </h1>
-                        <h1>Runners: 
-                            {hunts[hunts.length-1].runners &&
-                            <>
-                                {hunts[hunts.length-1].runners.map((runner, index) => (
-                                    runner === session?.user.email ? (
-                                        <span className="m-2" key={index}>You</span> 
-                                    ) : (
-                                        <span className="m-2" key={index}>{runner}</span> 
-                                    )
-                                ))}
-                            </>
-                            }
-                        </h1>     
+                        <h1 className="font-bold">Runners: </h1>  
+                        {hunts[hunts.length-1].runners &&
+                        <>
+                            {hunts[hunts.length-1].runners.map((runner, index) => (
+                                runner === session?.user.email ? (
+                                    <h4 key={index}>You</h4> 
+                                ) : (
+                                    <h4 key={index}>{runner}</h4> 
+                                )
+                            ))}
+                        </>
+                        }   
                         </>
                     ) : (
                         <h1>Runners
