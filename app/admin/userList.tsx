@@ -14,7 +14,11 @@ import { Button } from "@/components/ui/button";
 
 import { toast } from "sonner";
 
-export default function UserList({ users }: { users: [string]}) { 
+type UserListProps = {
+    users: string[];
+};
+
+export default function UserList({ users }: UserListProps) {
 
     const [input1, setInput1] = useState<string>("");
     const [input2, setInput2] = useState<string>("");
