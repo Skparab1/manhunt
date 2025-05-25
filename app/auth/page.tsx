@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useEffect } from 'react';
 // import './index.css'
 
 import { Button } from "@/components/ui/button"
@@ -38,7 +39,7 @@ export default function AuthPage() {
       <div className='text-center ml-1/2 bg-stone-300'>
 
         <div className="w-full bg-slate-800 text-white" style={{ height: "40px" }}>
-          <h1 className="absolute l-0 m-2">Manhunt {session?.user.email}</h1>
+          <h1 className="absolute l-0 m-2">Manhunt</h1>
         </div>
         <div className="w-1/2 ml-[25%] mt-32">
           <Auth
