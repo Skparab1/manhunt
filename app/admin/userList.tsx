@@ -20,11 +20,6 @@ type UserListProps = {
 
 export default function UserList({ users }: UserListProps) {
 
-    const [input1, setInput1] = useState<string>("");
-    const [input2, setInput2] = useState<string>("");
-
-    const [userList, setUserList] = useState<string[]>([]);
-
     const [session, setSession] = useState<Session | null>(null)
 
     const [hunts, setHunts] = useState<any[]>([]);
@@ -160,7 +155,7 @@ export default function UserList({ users }: UserListProps) {
                 <div className="flex flex-col gap-2">
                     <h1 className="text-2xl">Select Runners</h1>
                     {users.map((user: string) => (
-                        <div key={user} id={"div"+user} className="bg-gray-200 p-2 rounded-md w-full transition-all duration-200" onClick={() => handleHighlight(user)}>
+                        <div key={user} id={"div"+user} className="bg-gray-200 p-2 rounded-md w-full transition-all duration-200 text-center" onClick={() => handleHighlight(user)}>
                             <input
                                 id={"checkbox"+user}
                                 type="checkbox"

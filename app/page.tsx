@@ -468,101 +468,116 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="w-full bg-slate-800 text-white h-10 absolute t-0">
+      <div className="w-full bg-slate-800 text-white" style={{ height: "40px" }}>
         <h1 className="absolute l-0 m-2">Manhunt • {session?.user.email}</h1>
+        <Button
+          className="absolute right-0 top-0 h-6 bg-blue-400"
+          style={{ height: "30px", margin: "5px" }}
+          onClick={() => { window.location.href = "/auth"; }}
+        >
+          Menu
+        </Button>
       </div>
       {/* <h1 className="text-5xl font-bold pt-32">{String(hunts[hunts.length-1].id)}Jabari</h1> */}
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-stone-300">
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-          {hunts[hunts.length-1] == undefined ? (
-            <h1 className="text-5xl font-bold">Loading Hunts ...</h1>
-          ) : !hunts[hunts.length-1].runners ? (
+
+          {!session ? (
+            <Button onClick={() => { window.location.href = "/auth"; }}>Authenticate</Button>
+          ) : (
+
             <>
-              <h1 className="text-5xl font-bold">Complete!</h1>
-              <h1 className="font-bold">Runners</h1> 
-
-                  {hunts[hunts.length-2].runners.map((runner: string, index: number) => (
-                    runner === session?.user.email ? (
-                      <h2 key={index} className="m-0">You</h2>
-                    ) : (
-                      <h2 key={index} className="m-0">{runner}</h2> 
-                    )
-                  ))} 
-              <h1 className="font-bold">have completed their run.</h1>
-            </> 
-          ) : null}
-          
-          <div className={(hunts[hunts.length-1] == undefined || !hunts[hunts.length-1].runners) ? 'hidden' : undefined}>  
-        
-              { (hunts.length == 0 || !hunts[0]) ? (
-                <h1> No hunts</h1>
-              ) : (
-              <>
-            
-                {session ? (
-
+              {hunts[hunts.length-1] == undefined ? (
+                <h1 className="text-5xl font-bold">Loading Hunts ...</h1>
+              ) : !hunts[hunts.length-1].runners ? (
                 <>
-                  <CurrentTimeoutStream timeOutStatusRef={timeOutStatusRef} timeOutElapsedTime={timeOutElapsedTime} />
+                  <h1 className="text-5xl font-bold">Complete!</h1>
+                  <h1 className="font-bold">Runners</h1> 
 
-                  {!loading && (
-                      <>
-                      <RealtimeStream serverData={hunts ?? []} />
-                      {hunts.length > 0 && !hunts[hunts.length - 1].runners?.includes(session?.user.email || "NULL") && (huntTime ?? 0) < (60*30) && (
-                        <>
-                          <PointsStream pointsArr={everyonePoints ?? []} />
-                          <CurrentChallengeStream theChallenge={otherCurrentChallenge ?? []} />
-                          <AllTasksStream theChallenge={otherChallenges ?? []} />
-                        </>
-                      )}
-                      </>
-                  )}
+                      {hunts[hunts.length-2].runners.map((runner: string, index: number) => (
+                        runner === session?.user.email ? (
+                          <h2 key={index} className="m-0">You</h2>
+                        ) : (
+                          <h2 key={index} className="m-0">{runner}</h2> 
+                        )
+                      ))} 
+                  <h1 className="font-bold">have completed their run.</h1>
+                </> 
+              ) : null}
+              
+              <div className={(hunts[hunts.length-1] == undefined || !hunts[hunts.length-1].runners) ? 'hidden' : undefined}>  
+            
+                  { (hunts.length == 0 || !hunts[0]) ? (
+                    <h1> No hunts</h1>
+                  ) : (
+                  <>
+                
+                    {session ? (
 
-                  {hunts.length > 0 && hunts[hunts.length - 1].runners?.includes(session?.user.email || "NULL") && (huntTime ?? 0) < (60*30) && (
-                      <>
-                        <PointsStreamSelf selfPoints={currentPoints} user={session?.user.email || "NULL"} challenge={currentChallenge} timeOutStatus={timeOutStatus} onChallengeChange={setCurrentChallenge}/>
-                        {timeOutStatus == 0 && (
+                    <>
+                      <CurrentTimeoutStream timeOutStatusRef={timeOutStatusRef} timeOutElapsedTime={timeOutElapsedTime} />
+
+                      {!loading && (
                           <>
-                            { currentChallenge[0] !== "" ? (
+                          <RealtimeStream serverData={hunts ?? []} />
+                          {hunts.length > 0 && !hunts[hunts.length - 1].runners?.includes(session?.user.email || "NULL") && (huntTime ?? 0) < (60*30) && (
+                            <>
+                              <PointsStream pointsArr={everyonePoints ?? []} />
+                              <CurrentChallengeStream theChallenge={otherCurrentChallenge ?? []} />
+                              <AllTasksStream theChallenge={otherChallenges ?? []} />
+                            </>
+                          )}
+                          </>
+                      )}
+
+                      {hunts.length > 0 && hunts[hunts.length - 1].runners?.includes(session?.user.email || "NULL") && (huntTime ?? 0) < (60*30) && (
+                          <>
+                            <PointsStreamSelf selfPoints={currentPoints} user={session?.user.email || "NULL"} challenge={currentChallenge} timeOutStatus={timeOutStatus} onChallengeChange={setCurrentChallenge}/>
+                            {timeOutStatus == 0 && (
                               <>
-                                {(huntTime ?? 0) > (60*3) && (
-                                  <div className="flex gap-[24px] flex-wrap items-center justify-center">
-                                    <Button className="bg-green-400" onClick={completeChallenge}>
-                                      Complete
-                                    </Button>
-                                    <Button className="bg-yellow-400" onClick={skipChallenge}>
-                                      Skip
-                                    </Button>
-                                    <Button className="bg-red-400" onClick={vetoChallenge}>
-                                      Veto
+                                { currentChallenge[0] !== "" ? (
+                                  <>
+                                    {(huntTime ?? 0) > (60*3) && (
+                                      <div className="flex gap-[24px] flex-wrap items-center justify-center">
+                                        <Button className="bg-green-400" onClick={completeChallenge}>
+                                          Complete
+                                        </Button>
+                                        <Button className="bg-yellow-400" onClick={skipChallenge}>
+                                          Skip
+                                        </Button>
+                                        <Button className="bg-red-400" onClick={vetoChallenge}>
+                                          Veto
+                                        </Button>
+                                      </div>
+                                    )}
+                                  </>
+                                ) : (
+                                  <div className="text-center">
+                                    <Button className="bg-blue-400" onClick={makeChallenge}>
+                                      Generate Challenge
                                     </Button>
                                   </div>
                                 )}
                               </>
-                            ) : (
-                              <div className="text-center">
-                                <Button className="bg-blue-400" onClick={makeChallenge}>
-                                  Generate Challenge
-                                </Button>
-                              </div>
                             )}
+
+                            <h1 className="text-2xl font-bold text-center m-4 mt-8">
+                              Past Challenges
+                            </h1>
+
+                            <AllTasksStreamSelf theChallenge={pastChallenges} user={session?.user.email || "NULL"}/>
                           </>
-                        )}
+                      )}
 
-                        <h1 className="text-2xl font-bold text-center m-4 mt-8">
-                          Past Challenges
-                        </h1>
-
-                        <AllTasksStreamSelf theChallenge={pastChallenges} user={session?.user.email || "NULL"}/>
-                      </>
+                    </>) : (
+                      <Button onClick={() => { window.location.href = "/auth"; }}>Authenticate</Button>
+                    )}
+                  </>
                   )}
-
-                </>) : (
-                  <Button onClick={() => { window.location.href = "/auth"; }}>Authenticate</Button>
-                )}
-              </>
-              )}
-          </div>   
-        
+              </div>   
+            
+            </>
+          )}
         </main>
         <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
           

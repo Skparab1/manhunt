@@ -7,9 +7,12 @@ import { Button } from "@/components/ui/button"
 
 import supabase from "../utils/supabase";
 
+import Image from 'next/image';
+
 import type { Session } from '@supabase/supabase-js'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
+import evilSpongebobGif from '../evil-spongebob-ezgif.com-video-to-gif-converter.gif';
 
 export default function AuthPage() {
   
@@ -29,11 +32,34 @@ export default function AuthPage() {
     return () => subscription.unsubscribe()
   }, [])
 
+
   if (!session) {
     return (
-      <div className='w-1/2 ml-[25%] mt-32'>
-      <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={[]}
-      />
+      <div className='text-center ml-1/2 bg-stone-300'>
+
+        <div className="w-full bg-slate-800 text-white" style={{ height: "40px" }}>
+          <h1 className="absolute l-0 m-2">Manhunt {session?.user.email}</h1>
+        </div>
+        <div className="w-1/2 ml-[25%] mt-32">
+          <Auth
+            supabaseClient={supabase}
+            appearance={{
+          theme: ThemeSupa,
+          variables: {
+            default: {
+              colors: {
+                brand: '#1e293b',
+                brandAccent: '#1e293b',
+                brandButtonText: 'white',
+                inputBorder: '#1e293b',
+                inputBackground: 'aliceblue',
+              },
+            },
+          },
+            }}
+            providers={[]}
+          />
+        </div>
       </div>
     )
   } else {
@@ -41,12 +67,24 @@ export default function AuthPage() {
     // location.href = "/";
 
     return (
-      <div className='text-center ml-1/2 mt-[100px]'>
-        <div>Hello, {session.user.email}</div>
-        <Button className="m-2 bg-blue-400" onClick={() => { window.location.href = "/"; }}>Go to Manhunt</Button>
+      <div className='text-center ml-1/2 bg-stone-300'>
 
+        <div className="w-full bg-slate-800 text-white" style={{ height: "40px" }}>
+          <h1 className="absolute l-0 m-2">Manhunt • {session?.user.email}</h1>
+        </div>
+        
+        <Button className="bg-slate-400 text-center m-4">Hello, {session.user.email}</Button>
+        
+        <Image
+          src={evilSpongebobGif}
+          alt="Evil Spongebob"
+          width={300}
+          height={200}
+          style={{ display: "inline-block" }}
+        />
+
+        <Button className="m-2 bg-blue-400 mt-8" onClick={() => { window.location.href = "/"; }}>Go to Manhunt</Button>
         <Button className="m-2" onClick={() => { window.location.href = "/admin"; }}>Admin</Button>
-
         <Button className='bg-green-400 m-2' onClick={async () => {
           const { error } = await supabase.auth.signOut()
           if (error) console.log('Error logging out:', error.message)
