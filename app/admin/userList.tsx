@@ -119,6 +119,8 @@ export default function UserList({ users }: UserListProps) {
             } else {
                 huntersArray.push(users[i]);
             }
+
+            (checkElement as HTMLInputElement).checked = false;
             i++;
         }
 
