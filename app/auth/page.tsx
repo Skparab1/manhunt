@@ -58,18 +58,6 @@ export default function AuthPage() {
                 },
               }, 
             }}
-            localization={{
-              variables: {
-                sign_in: {
-                  email_label: 'Email address',
-                  email_input_placeholder: 'Enter your email NOW',
-                  password_label: 'Password',
-                  password_input_placeholder: 'Password AHHHH',
-                  loading_button_label: 'Jabari is working...',
-                  confirmation_text: 'Jabari has sent a magic link to your email. Click it to verify your email.',
-                },
-              },
-            }}
             providers={[]}
           />
         </div>
