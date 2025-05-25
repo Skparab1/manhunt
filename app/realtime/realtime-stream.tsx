@@ -157,19 +157,22 @@ export default function RealtimeStream({serverData} : {serverData: Hunt[]}) {
                         }   
                         </>
                     ) : (
-                        <h1>Runners
+                        <>
+                        <h1>Runners</h1>  
+
                             {hunts[hunts.length-1].runners &&
                                 <>
                                     {hunts[hunts.length-1].runners.map((runner: string, index: number) => (
                                         runner === session?.user.email ? (
-                                            <span key={index} className="m-2">You</span>
+                                            <h2 key={index} className="m-2">You</h2>
                                         ) : (
-                                            <span key={index} className="m-2">{runner}</span> 
+                                            <h2 key={index} className="m-2">{runner}</h2> 
                                         )
                                     ))} have completed their run.
                                 </>
                             }
-                        </h1>  
+
+                        </>
                     )}           
                 </div>
             ) : (
