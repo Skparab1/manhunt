@@ -375,7 +375,8 @@ export default function HomePage() {
       return;
     }
 
-    setCurrentPoints(currentPoints + currentChallenge[1]);
+    // Use functional update to ensure latest value
+    setCurrentPoints((prevPoints: number) => prevPoints + currentChallenge[1]);
     // setPastChallenges([...pastChallenges, [currentChallenge[0], currentChallenge[1], 1]]);
 
 

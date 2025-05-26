@@ -114,13 +114,18 @@ export default function UserList({ users }: UserListProps) {
         let i = 0;
         while (i < users.length) {
             const checkElement = document.getElementById("checkbox"+users[i]);
+            const divElement = document.getElementById("div"+users[i]);
+
             if (!(checkElement as HTMLInputElement)?.checked){
                 runnersArray.push(users[i]);
             } else {
                 huntersArray.push(users[i]);
             }
 
-            (checkElement as HTMLInputElement).checked = false;
+            divElement?.classList.add("bg-gray-200");
+            divElement?.classList.remove("bg-green-200");
+            
+            (checkElement as HTMLInputElement).checked = true;
             i++;
         }
 
