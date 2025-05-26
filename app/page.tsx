@@ -355,14 +355,18 @@ export default function HomePage() {
   async function upsertPoints(user: string, newPoints: number){
 
     const { data, error } = await supabase.from('points').select().eq('user', user);
-    // console.log("Data: ", data);
+    console.log("Data: ", data);
+
+    let oldPoints = 0;
 
     if (!data || data.length === 0) {
       const { error: insertError } = await supabase.from('points').insert({ user: user, points: 0 });
+    } else {
+      oldPoints = data[0].points;
     }
     
     // because we want to trigger the update subscription regardless
-    const { error: updateError } = await supabase.from('points').update({ points: newPoints }).eq('user', user);
+    const { error: updateError } = await supabase.from('points').update({ points: (newPoints + oldPoints) }).eq('user', user);
   }
 
   async function saveTask(user: string, task: string, points: number, status: number){
@@ -387,7 +391,7 @@ export default function HomePage() {
 
     let i = 0;
     while (i < hunts[hunts.length - 1].runners.length) {
-      upsertPoints(hunts[hunts.length - 1].runners[i], currentPoints+currentChallenge[1]);
+      upsertPoints(hunts[hunts.length - 1].runners[i], currentChallenge[1]);
 
       saveTask(hunts[hunts.length - 1].runners[i], currentChallenge[0], currentChallenge[1], 1);
       deleteDrawnTasks(hunts[hunts.length - 1].runners[i]);
@@ -418,7 +422,7 @@ export default function HomePage() {
 
     let i = 0;
     while (i < hunts[hunts.length - 1].runners.length) {
-      upsertPoints(hunts[hunts.length - 1].runners[i], currentPoints-1);
+      upsertPoints(hunts[hunts.length - 1].runners[i], -1);
 
       saveTask(hunts[hunts.length - 1].runners[i], currentChallenge[0], currentChallenge[1], 2);
       deleteDrawnTasks(hunts[hunts.length - 1].runners[i]);

@@ -13,9 +13,9 @@ export default function generateChallenge(){
         
         ["Make a stranger laugh, you must prove you made them laugh either with a picture or by getting on call and having the stranger laugh on call", 3],
         ["Go to lynbrook", 2],
-        ["Run one mile in any direction inside of the game area", 2],
+        ["You must walk for the next 2 minutes (no running), Facetime as proof", 2],
         ["Bury any treasure, the “treasure” can either be created by you or found on the ground but must be rare and unique, you must bury the treasure more than 4 inches under the ground", 3],
-        ["UNLUCKY!!! You may not complete challenges for 5 minutes, after 5 minutes you may draw your next card", 0],
+        ["UNLUCKY!!! You must veto this challenge. You may not complete challenges for 5 minutes, after 5 minutes you may draw your next card", 0],
         ["Freestyle a 3 minute long song on a voice call with the taggers", 1],
         ["Get a stranger to say idli to you without saying the word idli at all", 4],
         ["Get into a conversation with a girl you have never met and take a picture with her, the conversation must be at least 30 seconds long and the girl must be aware you are taking the picture", 5],
@@ -63,10 +63,10 @@ export default function generateChallenge(){
         ["Find a dog wearing clothes and take a selfie with it", 3],
         ["Find a license plate from another state and send a picture", 1],
         ["Find a flower and give it to a stranger, get a picture", 2],
-        
         ["Find a store employee and ask for their favorite product, video required", 2],
         ["Take a picture with a bicycle (yours or someone else's)", 1],
         ["Find a bridge and walk across it, send proof", 2],
+        
         ["Find a bus stop and wait there for 2 minutes, send proof", 1],
         ["Find a mailbox and take a selfie with it", 1],
         ["Find a sign in a language other than English, send a picture", 1],
