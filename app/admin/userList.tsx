@@ -133,9 +133,14 @@ export default function UserList({ users }: UserListProps) {
     }
 
     async function terminate() {
-        const { error } = await supabase.from('hunts').insert({});
-        toast("Hunt terminated");
-        setHunts((prev : any) => [...prev, { id: null, runners: null, hunters: null, created_at: null }]);
+        if (hunts[hunts.length - 1].runners){
+            toast("Hunt terminated");
+            
+            const { error } = await supabase.from('hunts').insert({});
+            setHunts((prev : any) => [...prev, { id: null, runners: null, hunters: null, created_at: null }]);
+        } else {
+            toast("Hunt already terminated; no effect")
+        }
     }
 
     function handleHighlight(id: string) {
