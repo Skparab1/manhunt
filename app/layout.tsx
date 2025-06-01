@@ -2,19 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarProvider
-} from "@/components/ui/sidebar"
+import { ThemeProvider } from "@/components/theme-provider"
 
 import { Toaster } from "@/components/ui/sonner"
 
@@ -61,12 +49,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-stone-300`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-stone-300 dark:bg-neutral-900`}
         style={{ overflowX: "hidden", width: "100vw", margin: 0, padding: 0 }}
       >
-        {children}
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+          {children}
+        </ThemeProvider>
 
         <Toaster />
 {/* 

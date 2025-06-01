@@ -61,7 +61,7 @@ export default function CurrentChallengeStream({ theChallenge }: { theChallenge:
             (<>
                 <h1 className="text-2xl font-bold text-center mt-8">Runners' current challenge</h1>
 
-                <div className={"bg-blue-200 p-4 rounded-md text-center"}>
+                <div className={"bg-blue-400 p-4 rounded-md text-center"}>
                     <h2>{currentChallenge[0]}</h2>
                     <h2 className="font-bold">{currentChallenge[1]} points</h2>
                 </div>

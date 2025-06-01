@@ -50,7 +50,7 @@ export default function generateChallenge(){
         ["Find cans of soup and curl them", 2],
         ["Facetime the taggers and do 20 pushups, you must be on call for the entire duration of the pushups", 2],
         ["Facetime the taggers and name the 50 states alphabetically, if you fail, automatically veto", 3],
-        ["Find a T-junction (intersection where one of the roads ends) and take a picture", 1],
+        ["Slide down the slide of a play structure", 2],
         ["Find a restaurant with a drive-thru, send picture as proof", 2],
         ["Find a yellow yield sign and take a picture", 2],
         ["Enter a city other than the one you are currently in", 3],

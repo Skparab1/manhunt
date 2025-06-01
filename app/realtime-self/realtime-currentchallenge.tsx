@@ -83,9 +83,9 @@ export default function CurrentChallengeStreamSelf({ theChallenge, user }: { the
         <div className="m-4 mt-10">
             {currentChallenge[0] != "" &&
             (<>
-                <div className={"bg-blue-200 p-4 pt-2 rounded-md text-center mb-4"}>
+                <div className={"bg-blue-400 p-4 pt-2 rounded-md text-center mb-4"}>
                     <h2>{currentChallenge[0]}</h2>
-                    <h2 className="font-bold">{currentChallenge[1]} JABARII points</h2>
+                    <h2 className="font-bold">{currentChallenge[1]} points</h2>
                 </div>
 
             </>)}

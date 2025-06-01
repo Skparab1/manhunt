@@ -473,10 +473,10 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="w-full bg-slate-800 text-white" style={{ height: "40px" }}>
+      <div className="w-full bg-slate-800 dark:bg-[rgb(20,77,128)] text-white" style={{ height: "40px" }}>
         <h1 className="absolute l-0 m-2">Manhunt • {session?.user.email}</h1>
         <Button
-          className="absolute right-0 top-0 h-6 bg-blue-400"
+          className="absolute right-0 top-0 h-6 bg-blue-400 dark:bg-slate-800 dark:text-slate-200"
           style={{ height: "30px", margin: "5px" }}
           onClick={() => { window.location.href = "/auth"; }}
         >
@@ -484,7 +484,7 @@ export default function HomePage() {
         </Button>
       </div>
       {/* <h1 className="text-5xl font-bold pt-32">{String(hunts[hunts.length-1].id)}Jabari</h1> */}
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-stone-300">
+      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-stone-300 dark:bg-neutral-900">
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
 
           {!session ? (

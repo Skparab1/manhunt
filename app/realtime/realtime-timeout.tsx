@@ -41,7 +41,7 @@ export default function CurrentTimeoutStream({ timeOutStatusRef, timeOutElapsedT
     return (
         <div>
             {timeOutStatusRef.current?.current === 1 && (
-            <div className="text-center bg-red-200 p-4 rounded-md mb-19 -mt-16 mb-28">
+            <div className="text-center bg-red-400 p-4 rounded-md mb-19 -mt-16 mb-28">
                 <h1>
                 5 min timeout initiated for vetoing a challenge.
                 Timeout will elapse in {Math.floor((5 * 60 - timeOutElapsedTime) / 60)}m {Math.floor((5 * 60 - timeOutElapsedTime) % 60)}s.

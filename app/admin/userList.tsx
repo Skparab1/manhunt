@@ -118,14 +118,17 @@ export default function UserList({ users }: UserListProps) {
 
             if (!(checkElement as HTMLInputElement)?.checked){
                 runnersArray.push(users[i]);
+                    
+                divElement?.classList.remove("bg-green-200");
+                divElement?.classList.add("bg-gray-200");
+                divElement?.classList.remove("dark:bg-green-400");
+                divElement?.classList.add("dark:bg-gray-800");
+                
+                (checkElement as HTMLInputElement).checked = true;
+
             } else {
                 huntersArray.push(users[i]);
             }
-
-            divElement?.classList.add("bg-gray-200");
-            divElement?.classList.remove("bg-green-200");
-            
-            (checkElement as HTMLInputElement).checked = true;
             i++;
         }
 
@@ -148,12 +151,19 @@ export default function UserList({ users }: UserListProps) {
         const checkElement = document.getElementById("checkbox"+id);
         const divElement = document.getElementById("div"+id);
         if ((checkElement as HTMLInputElement)?.checked){
-            divElement?.classList.add("bg-green-200");
+
             divElement?.classList.remove("bg-gray-200");
+            divElement?.classList.remove("dark:bg-gray-800");
+            divElement?.classList.add("dark:bg-green-400");
+            divElement?.classList.add("bg-green-400");
+
             (checkElement as HTMLInputElement).checked = false;
         } else {
+            divElement?.classList.remove("dark:bg-green-400");
+            divElement?.classList.remove("bg-green-400");
             divElement?.classList.add("bg-gray-200");
-            divElement?.classList.remove("bg-green-200");
+            divElement?.classList.add("dark:bg-gray-800");
+
             (checkElement as HTMLInputElement).checked = true;
         }
     }
@@ -165,9 +175,9 @@ export default function UserList({ users }: UserListProps) {
             {(session && session.user.email == "skparab1@gmail.com") ? (
             <>
                 <div className="flex flex-col gap-2">
-                    <h1 className="text-2xl">Select Runners</h1>
+                    <h1 className="text-2xl text-center">Select Runners</h1>
                     {users.map((user: string) => (
-                        <div key={user} id={"div"+user} className="bg-gray-200 p-2 rounded-md w-full transition-all duration-200 text-center" onClick={() => handleHighlight(user)}>
+                        <div key={user} id={"div"+user} className="bg-gray-200 p-2 rounded-md w-full transition-all duration-200 text-center dark:bg-gray-800" onClick={() => handleHighlight(user)}>
                             <input
                                 id={"checkbox"+user}
                                 type="checkbox"
@@ -196,7 +206,7 @@ export default function UserList({ users }: UserListProps) {
                             <div
                                 key={hunt.id}
                                 className={`p-2 rounded-md w-full text-center ${
-                                    hunt.id === hunts[hunts.length - 1]?.id ? "bg-green-200" : "bg-gray-200"
+                                    hunt.id === hunts[hunts.length - 1]?.id ? "bg-green-400" : "bg-gray-400"
                                 }`}
                             >
                                 <h2 className="font-bold">Runners:</h2>

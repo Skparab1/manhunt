@@ -61,10 +61,10 @@ export default function AllTasksStream({ theChallenge }: { theChallenge: [string
                 <div key={index} 
                     className={
                         (challenge[2] == 1
-                            ? "bg-green-200"
+                            ? "bg-green-400"
                             : challenge[2] == 2
-                            ? "bg-yellow-200"
-                            : "bg-red-200") +
+                            ? "bg-yellow-500"
+                            : "bg-red-400") +
                         " p-4 rounded-md text-center m-4"
                     }
                 >

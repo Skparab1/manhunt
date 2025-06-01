@@ -36,9 +36,9 @@ export default function AuthPage() {
 
   if (!session) {
     return (
-      <div className='text-center ml-1/2 bg-stone-300'>
+      <div className='text-center ml-1/2 bg-stone-300 dark:bg-neutral-900'>
 
-        <div className="w-full bg-slate-800 text-white" style={{ height: "40px" }}>
+        <div className="w-full bg-slate-800 dark:bg-[rgb(20,77,128)] text-white" style={{ height: "40px" }}>
           <h1 className="absolute l-0 m-2">Manhunt</h1>
         </div>
         <div className="w-1/2 ml-[25%] mt-32">
@@ -68,9 +68,9 @@ export default function AuthPage() {
     // location.href = "/";
 
     return (
-      <div className='text-center ml-1/2 bg-stone-300'>
+      <div className='text-center ml-1/2 bg-stone-300 dark:bg-neutral-900'>
 
-        <div className="w-full bg-slate-800 text-white" style={{ height: "40px" }}>
+        <div className="w-full bg-slate-800 dark:bg-[rgb(20,77,128)] text-white" style={{ height: "40px" }}>
           <h1 className="absolute l-0 m-2">Manhunt • {session?.user.email}</h1>
         </div>
         
