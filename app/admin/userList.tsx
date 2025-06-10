@@ -24,6 +24,9 @@ export default function UserList({ users }: UserListProps) {
 
     const [hunts, setHunts] = useState<any[]>([]);
 
+    const [tab, setTab] = useState<"teams" | "adjustment">("teams");
+
+    const [everyonePoints, setEveryonePoints] = useState<[string, number][]>([]);
 
     useEffect(() => {
         supabase
@@ -67,11 +70,35 @@ export default function UserList({ users }: UserListProps) {
         let userListFinal = await getUsers();
         console.log("jabari");
         console.log(userListFinal);
-
     }
 
     useEffect(() => {
         clientFetchUsers();
+    }, []);
+
+    async function getPoints() {
+        supabase
+        .from("points")
+        .select("user, points")
+        .then(({ data, error }) => {
+            if (error) {
+            console.error("Error fetching points:", error);
+            }
+            console.log("Data37: ", data);
+
+            if (data && data.length > 0) {
+            const sortedData = data
+                .slice()
+                .sort((a: any, b: any) => a.user.localeCompare(b.user));
+            setEveryonePoints(sortedData.map((item: any) => [item.user, item.points]));
+            } else {
+            setEveryonePoints([]);
+            }
+        });
+    }
+
+    useEffect(() => {
+        getPoints();
     }, []);
 
     // console.log(getUsers());
@@ -169,65 +196,134 @@ export default function UserList({ users }: UserListProps) {
     }
 
 
+    async function modPoints(adjustment: number, user: string, prevpoints: number){
+        const { error } = await supabase
+            .from("points")
+            .update({ points: (prevpoints as number) + adjustment })
+            .eq("user", user);
+        if (!error) getPoints();
+    }
+
 
     return (
         <>
             {(session && session.user.email == "skparab1@gmail.com") ? (
             <>
-                <div className="flex flex-col gap-2">
-                    <h1 className="text-2xl text-center">Select Runners</h1>
-                    {users.map((user: string) => (
-                        <div key={user} id={"div"+user} className="bg-gray-200 p-2 rounded-md w-full transition-all duration-200 text-center dark:bg-gray-800" onClick={() => handleHighlight(user)}>
-                            <input
-                                id={"checkbox"+user}
-                                type="checkbox"
-                                className="m-2 hidden"
-                                onChange={() => handleHighlight(user)}
-                                defaultChecked
-                            />
-                            <label>{user}</label>
-                        </div>
-                    ))}
-                </div>
+                <div className="flex flex-col gap-4">
+                    <div className="flex mb-4 bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+                        <button
+                            className={`flex-1 px-4 py-2 transition-colors duration-200 focus:outline-none ${
+                                tab === "teams"
+                                    ? "bg-gray-300 dark:bg-green-400 text-black font-bold"
+                                    : "text-gray-500"
+                            }`}
+                            style={{ borderRadius: tab === "teams" ? "0.5rem 0 0 0.5rem" : "0.5rem 0 0 0.5rem" }}
+                            onClick={() => setTab("teams")}
+                        >
+                            Teams
+                        </button>
+                        <button
+                            className={`flex-1 px-4 py-2 transition-colors duration-200 focus:outline-none ${
+                                tab === "adjustment"
+                                    ? "bg-gray-300 dark:bg-green-400 text-black font-bold"
+                                    : "text-gray-500"
+                            }`}
+                            style={{ borderRadius: tab === "adjustment" ? "0 0.5rem 0.5rem 0" : "0.5rem 0 0 0.5rem" }}
+                            onClick={() => setTab("adjustment")}
+                        >
+                            Adjustment
+                        </button>
+                    </div>
 
-                <Button onClick={() => handleSubmit()}>
-                    Start Hunt
-                </Button>
-
-                <Button onClick={() => terminate()}>
-                    Terminate current hunt
-                </Button>
-
-
-                <div className="flex flex-col gap-2">
-                    <h1 className="text-2xl text-center">Previous Hunts</h1>
-                    {[...hunts].reverse().map((hunt: any) => (
-                        (hunt.runners && (
-                            <div
-                                key={hunt.id}
-                                className={`p-2 rounded-md w-full text-center ${
-                                    hunt.id === hunts[hunts.length - 1]?.id ? "bg-green-400" : "bg-gray-400"
-                                }`}
-                            >
-                                <h2 className="font-bold">Runners:</h2>
-                                <ul>
-                                    {hunt.runners?.map((runner: string) => (
-                                        <li key={runner}>{runner}</li>
-                                    ))}
-                                </ul>
-                                <h2 className="font-bold mt-2">Hunters:</h2>
-                                <ul>
-                                    {hunt.hunters?.map((hunter: string) => (
-                                        <li key={hunter}>{hunter}</li>
-                                    ))}
-                                </ul>
-                                <h2 className="font-bold mt-2 mb-2">{new Date(hunt.created_at).toLocaleString()}</h2>
-                                <Button onClick={() => startRun(hunt.runners || [], hunt.hunters || [])}>
-                                    Run again
-                                </Button>
+                    {tab === "teams" && (
+                        <>
+                            <div className="flex flex-col gap-2">
+                                <h1 className="text-2xl text-center">Select Runners</h1>
+                                {users.map((user: string) => (
+                                    <div key={user} id={"div"+user} className="bg-gray-200 p-2 rounded-md w-full transition-all duration-200 text-center dark:bg-gray-800" onClick={() => handleHighlight(user)}>
+                                        <input
+                                            id={"checkbox"+user}
+                                            type="checkbox"
+                                            className="m-2 hidden"
+                                            onChange={() => handleHighlight(user)}
+                                            defaultChecked
+                                        />
+                                        <label>{user}</label>
+                                    </div>
+                                ))}
                             </div>
-                        ))
-                    ))}
+
+                            <Button onClick={() => handleSubmit()}>
+                                Start Hunt
+                            </Button>
+
+                            <Button onClick={() => terminate()}>
+                                Terminate current hunt
+                            </Button>
+
+                            <div className="flex flex-col gap-2">
+                                <h1 className="text-2xl text-center">Previous Hunts</h1>
+                                {[...hunts].reverse().map((hunt: any) => (
+                                    (hunt.runners && (
+                                        <div
+                                            key={hunt.id}
+                                            className={`p-2 rounded-md w-full text-center ${
+                                                hunt.id === hunts[hunts.length - 1]?.id ? "bg-green-400" : "bg-gray-400"
+                                            }`}
+                                        >
+                                            <h2 className="font-bold">Runners:</h2>
+                                            <ul>
+                                                {hunt.runners?.map((runner: string) => (
+                                                    <li key={runner}>{runner}</li>
+                                                ))}
+                                            </ul>
+                                            <h2 className="font-bold mt-2">Hunters:</h2>
+                                            <ul>
+                                                {hunt.hunters?.map((hunter: string) => (
+                                                    <li key={hunter}>{hunter}</li>
+                                                ))}
+                                            </ul>
+                                            <h2 className="font-bold mt-2 mb-2">{new Date(hunt.created_at).toLocaleString()}</h2>
+                                            <Button onClick={() => startRun(hunt.runners || [], hunt.hunters || [])}>
+                                                Run again
+                                            </Button>
+                                        </div>
+                                    ))
+                                ))}
+                            </div>
+                        </>
+                    )}
+
+                    {tab === "adjustment" && (
+                        <div className="flex flex-col gap-4 items-center">
+                            <div className="flex flex-col gap-2">
+                            <h1 className="text-2xl text-center">Points Adjustment</h1>
+                            {everyonePoints.map(([user, points]) => (
+                                <div
+                                    key={user}
+                                    className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-2 rounded w-full"
+                                >
+                                    <span>{user}</span>
+                                    <div className="flex items-center gap-2 ml-4">
+                                        <button
+                                            className="px-2 py-1 rounded bg-red-200 dark:bg-red-600 text-black dark:text-white"
+                                            onClick={async () => { modPoints(-1, user, points) }}
+                                        >
+                                            -
+                                        </button>
+                                        <span className="px-2">{points}</span>
+                                        <button
+                                            className="px-2 py-1 rounded bg-green-200 dark:bg-green-600 text-black dark:text-white"
+                                            onClick={async () => { modPoints(1, user, points) }}
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </>
             ) : !session ? (

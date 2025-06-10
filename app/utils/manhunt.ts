@@ -7,7 +7,7 @@ export default function generateChallenge(){
         ["Yell HEEEEEELLLLLPPP decided by the taggers in a public place, You must get on video call with one of the taggers to prove you are yelling, the public place does not have to be populated, just a public place, from there you must yell", 1],
         ["FREEEEEEE POIIIIIINT, after informing the taggers you got this card, immediately draw your next card", 1],
         ["Make a shot in a basketball hoop with any item", 2],
-        ["Hold a conversation with a stranger for 30 seconds(must be on call for proof)", 2],
+        ["Hold a conversation with a stranger for 30 seconds (must be on call for proof)", 2],
         ["Enter any store", 1],
         ["Find an item in a store worth more than 50 dollars and take a picture with it", 2],
         

@@ -2,6 +2,8 @@ import { getUsers } from "../utils/supabase-auth";
 
 import UserList from "./userList";
 
+import supabase from "../utils/supabase";
+
 export default async function HomePage() {
     async function clientFetchUsers() {
         let userListFinal = await getUsers();
@@ -11,6 +13,7 @@ export default async function HomePage() {
     }
 
     let users = await clientFetchUsers();
+
 
     return (
         <>

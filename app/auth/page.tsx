@@ -74,23 +74,29 @@ export default function AuthPage() {
           <h1 className="absolute l-0 m-2">Manhunt • {session?.user.email}</h1>
         </div>
         
-        <Button className="bg-slate-400 text-center m-4">Hello, {session.user.email}</Button>
-        
-        <Image
-          src={evilSpongebobGif}
-          alt="Evil Spongebob"
-          width={300}
-          height={200}
-          style={{ display: "inline-block" }}
-        />
+        <div className="flex flex-col items-center space-y-4 mt-8">
+            <div className="p-8 m-4 rounded shadow flex flex-col items-center space-y-4 w-full max-w-xl">
+            <Button className="bg-slate-400 text-center">Hello, {session.user.email}</Button>
+            
+            <Image
+              src={evilSpongebobGif}
+              alt="Evil Spongebob"
+              width={300}
+              height={200}
+              style={{ display: "inline-block" }}
+            />
 
-        <Button className="m-2 bg-blue-400 mt-8" onClick={() => { window.location.href = "/"; }}>Go to Manhunt</Button>
-        <Button className="m-2" onClick={() => { window.location.href = "/admin"; }}>Admin</Button>
-        <Button className='bg-green-400 m-2' onClick={async () => {
-          const { error } = await supabase.auth.signOut()
-          if (error) console.log('Error logging out:', error.message)
-          else console.log('Logged out successfully')
-        }}>Logout</Button>
+            <div className="flex flex-row space-x-4 mt-1">
+              <Button className="bg-blue-400" onClick={() => { window.location.href = "/"; }}>Go to Manhunt</Button>
+              <Button onClick={() => { window.location.href = "/admin"; }}>Admin</Button>
+              <Button className='bg-green-400' onClick={async () => {
+              const { error } = await supabase.auth.signOut()
+              if (error) console.log('Error logging out:', error.message)
+              else console.log('Logged out successfully')
+              }}>Logout</Button>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
