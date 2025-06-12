@@ -54,6 +54,8 @@ export default function generateChallenge(){
         ["Find a restaurant with a drive-thru, send picture as proof", 2],
         ["Find a yellow yield sign and take a picture", 2],
         ["Enter a city other than the one you are currently in", 3],
+
+        ["Give a hi five to any person not playing the game, send a picture as proof", 2],
         
         // AI generated challenges below
         ["Take a picture with a statue or public art installation", 2],
