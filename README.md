@@ -1,3 +1,30 @@
+## Manhunt Game Manager ([manhunt.skparab1.com](https://manhunt.skparab1.com/auth))
+<img width="200" alt="Screenshot 2025-06-14 at 12 59 47 PM" src="https://github.com/user-attachments/assets/bf3a5f9f-6e46-4b68-ba44-933c42eb5269" />
+<img width="200" alt="Screenshot 2025-06-14 at 12 59 47 PM" src="https://github.com/user-attachments/assets/2f0c16f9-2d98-4625-890c-88aeed3248c1" />
+<img width="200" alt="Screenshot 2025-06-14 at 12 59 47 PM" src="https://github.com/user-attachments/assets/bf5c591e-1bd7-4ef2-9914-cb9c7a06404c" />
+<img width="200" alt="Screenshot 2025-06-14 at 12 59 47 PM" src="https://github.com/user-attachments/assets/f8ae27e4-d3f4-4491-92e0-3d2d028c2552" />
+
+
+## Overview
+* Run realtime multiplayer games of manhunt
+* The Manhunt implemented in this game is an adaptation of the game Tag, except that runners run in groups and must complete challenges
+* This mobile-optimized web app implements the basic functions of the game
+* Self hostable (enter your own supabase keys)
+
+## Stack
+* Next.js + Typescript + Tailwind
+* Supabase Realtime
+
+# Features
+* Random challenge generation
+* Realtime hunt updates
+* Instant points and challenge completion updates
+* Admin panel for initiating hunts and adjusting points
+
+<br><br><br><br><br><br><br>
+
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
