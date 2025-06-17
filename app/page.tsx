@@ -27,6 +27,8 @@ import { Button } from "@/components/ui/button";
 
 import { toast } from "sonner"
 
+import LeafletMap from "@/components/ui/LeafletTracker";
+
 export default function HomePage() {
 
   const [session, setSession] = useState<Session | null>(null);
@@ -48,6 +50,9 @@ export default function HomePage() {
 
   const timeOutStatusRef = useRef<{ current: number }>({ current: timeOutStatus });
 
+  // Location tracking
+  const [isTrackingLocation, setIsTrackingLocation] = useState(false);
+  const [locationPermission, setLocationPermission] = useState<PermissionState | null>(null);
 
   // hunter and spectator stuff under here
   const [everyonePoints, setEveryonePoints] = useState<[string, number][]>([]);
@@ -247,6 +252,22 @@ export default function HomePage() {
   useEffect(() => {
     timeOutStatusRef.current.current = timeOutStatus;
   }, [timeOutStatus]);
+
+  // Auto-start location tracking for runners
+  useEffect(() => {
+    if (session?.user.email && hunts.length > 0) {
+      const currentHunt = hunts[hunts.length - 1];
+      const isRunner = currentHunt?.runners?.includes(session.user.email);
+      
+      if (isRunner && !isTrackingLocation) {
+        console.log('Starting location tracking for runner:', session.user.email);
+        startLocationTracking();
+      } else if (!isRunner && isTrackingLocation) {
+        console.log('Stopping location tracking - user is not a runner');
+        stopLocationTracking();
+      }
+    }
+  }, [session, hunts, isTrackingLocation]);
 
   const seconds_interval = 0.1 * 1000;
 
@@ -471,6 +492,94 @@ export default function HomePage() {
   //   return null;
   // }
 
+  // Location tracking functions
+  async function updateUserLocation(lat: number, lng: number) {
+    if (!session?.user.email) return;
+
+    const { error } = await supabase
+      .from('userLocations')
+      .upsert({
+        id: session.user.email,
+        lat: lat,
+        long: lng,
+        updated_at: new Date().toISOString()
+      });
+
+    if (error) {
+      console.error('Error updating location:', error);
+    }
+  }
+
+  async function startLocationTracking() {
+    if (!session?.user.email) return;
+
+    // Check if user is a runner in the current hunt
+    const currentHunt = hunts[hunts.length - 1];
+    if (!currentHunt?.runners?.includes(session.user.email)) {
+      console.log('User is not a runner in current hunt');
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      console.error('Geolocation is not supported by this browser');
+      return;
+    }
+
+    // Request location permission
+    try {
+      const permission = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
+      setLocationPermission(permission.state);
+
+      if (permission.state === 'denied') {
+        console.error('Location permission denied');
+        return;
+      }
+
+      setIsTrackingLocation(true);
+
+      // Start watching position
+      const watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          updateUserLocation(latitude, longitude);
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          setIsTrackingLocation(false);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 30000 // Update every 30 seconds
+        }
+      );
+
+      // Store watch ID for cleanup
+      return () => {
+        navigator.geolocation.clearWatch(watchId);
+        setIsTrackingLocation(false);
+      };
+    } catch (error) {
+      console.error('Error requesting location permission:', error);
+    }
+  }
+
+  async function stopLocationTracking() {
+    setIsTrackingLocation(false);
+  }
+
+  // Test function to add a sample location
+  async function addTestLocation() {
+    if (!session?.user.email) return;
+    
+    // Add a test location near the default center
+    const testLat = 37.3129978 + (Math.random() - 0.5) * 0.01; // Small random offset
+    const testLng = -122.0121823 + (Math.random() - 0.5) * 0.01;
+    
+    await updateUserLocation(testLat, testLng);
+    console.log('Test location added:', { lat: testLat, lng: testLng });
+  }
+
   return (
     <>
       <div className="w-full bg-slate-800 dark:bg-[rgb(20,77,128)] text-white" style={{ height: "40px" }}>
@@ -517,54 +626,25 @@ export default function HomePage() {
                   ) : (
                   <>
                 
-                    {session ? (
-
-                    <>
-                      <CurrentTimeoutStream timeOutStatusRef={timeOutStatusRef} timeOutElapsedTime={timeOutElapsedTime} />
-
-                      {!loading && (
+                    {session && (
+                      <>
+                        {hunts.length > 0 && hunts[hunts.length - 1].runners && (
                           <>
-                          <RealtimeStream serverData={hunts ?? []} />
-                          {hunts.length > 0 && !hunts[hunts.length - 1].runners?.includes(session?.user.email || "NULL") && (huntTime ?? 0) < (60*30) && (
-                            <>
-                              <PointsStream pointsArr={everyonePoints ?? []} />
-                              <CurrentChallengeStream theChallenge={otherCurrentChallenge ?? []} />
-                              <AllTasksStream theChallenge={otherChallenges ?? []} />
-                            </>
-                          )}
-                          </>
-                      )}
 
-                      {hunts.length > 0 && hunts[hunts.length - 1].runners?.includes(session?.user.email || "NULL") && (huntTime ?? 0) < (60*30) && (
-                          <>
-                            <PointsStreamSelf selfPoints={currentPoints} user={session?.user.email || "NULL"} challenge={currentChallenge} timeOutStatus={timeOutStatus} onChallengeChange={setCurrentChallenge}/>
-                            {timeOutStatus == 0 && (
-                              <>
-                                { currentChallenge[0] !== "" ? (
-                                  <>
-                                    {(huntTime ?? 0) > (60*3) && (
-                                      <div className="flex gap-[24px] flex-wrap items-center justify-center">
-                                        <Button className="bg-green-400" onClick={completeChallenge}>
-                                          Complete
-                                        </Button>
-                                        <Button className="bg-yellow-400" onClick={skipChallenge}>
-                                          Skip
-                                        </Button>
-                                        <Button className="bg-red-400" onClick={vetoChallenge}>
-                                          Veto
-                                        </Button>
-                                      </div>
-                                    )}
-                                  </>
-                                ) : (
-                                  <div className="text-center">
-                                    <Button className="bg-blue-400" onClick={makeChallenge}>
-                                      Generate Challenge
-                                    </Button>
-                                  </div>
-                                )}
-                              </>
-                            )}
+                            <h1 className="text-2xl font-bold text-center m-4">
+                              Current Challenge
+                            </h1>
+
+                            <CurrentChallengeStream theChallenge={currentChallenge}/>
+
+                            <div className="flex gap-4 justify-center">
+                              <Button onClick={() => completeChallenge()}>
+                                Complete Challenge
+                              </Button>
+                              <Button onClick={() => skipChallenge()}>
+                                Skip Challenge (-1 point)
+                              </Button>
+                            </div>
 
                             <h1 className="text-2xl font-bold text-center m-4 mt-8">
                               Past Challenges
@@ -572,10 +652,97 @@ export default function HomePage() {
 
                             <AllTasksStreamSelf theChallenge={pastChallenges} user={session?.user.email || "NULL"}/>
                           </>
-                      )}
+                        )}
 
-                    </>) : (
-                      <Button onClick={() => { window.location.href = "/auth"; }}>Authenticate</Button>
+                        {hunts.length > 0 && hunts[hunts.length - 1].hunters && (
+                          <>
+                            <h1 className="text-2xl font-bold text-center m-4">
+                              Current Challenge
+                            </h1>
+
+                            <CurrentChallengeStream theChallenge={otherCurrentChallenge}/>
+
+                            <h1 className="text-2xl font-bold text-center m-4 mt-8">
+                              Past Challenges
+                            </h1>
+
+                            <AllTasksStreamSelf theChallenge={otherChallenges} user={session?.user.email || "NULL"}/>
+                          </>
+                        )}
+
+                        {hunts.length > 0 && !hunts[hunts.length - 1].runners && !hunts[hunts.length - 1].hunters && (
+                          <>
+                            <h1 className="text-2xl font-bold text-center m-4">
+                              Current Challenge
+                            </h1>
+
+                            <CurrentChallengeStream theChallenge={otherCurrentChallenge}/>
+
+                            <h1 className="text-2xl font-bold text-center m-4 mt-8">
+                              Past Challenges
+                            </h1>
+
+                            <AllTasksStreamSelf theChallenge={otherChallenges} user={session?.user.email || "NULL"}/>
+                          </>
+                        )}
+
+                        {hunts.length > 0 && hunts[hunts.length - 1].runners && hunts[hunts.length - 1].runners.includes(session?.user.email || "NULL") && (
+                          <>
+                            <h1 className="text-2xl font-bold text-center m-4">
+                              Current Challenge
+                            </h1>
+
+                            <CurrentChallengeStream theChallenge={currentChallenge}/>
+
+                            <div className="flex gap-4 justify-center">
+                              <Button onClick={() => completeChallenge()}>
+                                Complete Challenge
+                              </Button>
+                              <Button onClick={() => skipChallenge()}>
+                                Skip Challenge (-1 point)
+                              </Button>
+                            </div>
+
+                            <h1 className="text-2xl font-bold text-center m-4 mt-8">
+                              Past Challenges
+                            </h1>
+
+                            <AllTasksStreamSelf theChallenge={pastChallenges} user={session?.user.email || "NULL"}/>
+                          </>
+                        )}
+
+                        {hunts.length > 0 && hunts[hunts.length - 1].hunters && hunts[hunts.length - 1].hunters.includes(session?.user.email || "NULL") && (
+                          <>
+                            <h1 className="text-2xl font-bold text-center m-4">
+                              Current Challenge
+                            </h1>
+
+                            <CurrentChallengeStream theChallenge={otherCurrentChallenge}/>
+
+                            <h1 className="text-2xl font-bold text-center m-4 mt-8">
+                              Past Challenges
+                            </h1>
+
+                            <AllTasksStreamSelf theChallenge={otherChallenges} user={session?.user.email || "NULL"}/>
+                          </>
+                        )}
+
+                        {hunts.length > 0 && !hunts[hunts.length - 1].runners?.includes(session?.user.email || "NULL") && !hunts[hunts.length - 1].hunters?.includes(session?.user.email || "NULL") && (
+                          <>
+                            <h1 className="text-2xl font-bold text-center m-4">
+                              Current Challenge
+                            </h1>
+
+                            <CurrentChallengeStream theChallenge={otherCurrentChallenge}/>
+
+                            <h1 className="text-2xl font-bold text-center m-4 mt-8">
+                              Past Challenges
+                            </h1>
+
+                            <AllTasksStreamSelf theChallenge={otherChallenges} user={session?.user.email || "NULL"}/>
+                          </>
+                        )}
+                      </>
                     )}
                   </>
                   )}
@@ -583,6 +750,7 @@ export default function HomePage() {
             
             </>
           )}
+          <LeafletMap/>
         </main>
         <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
           
